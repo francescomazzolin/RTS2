@@ -2,6 +2,11 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+import statsmodels.tsa.stattools as smt
+
+import statsmodels.graphics.tsaplots as smp
+
+
 """
 POINT 1: DATA DOWNLOAD AND MANIPULATION
 """
@@ -123,7 +128,7 @@ for i in df_logprice_monthly.columns:
     
     plt.figure()
     
-    plt.plot(time_m, df_logprice_monthly[i])
+    plt.plot(time_m, df_logprice_monthly[i], color = 'red')
     plt.title("{asset} log prices - Monthly frequency".format(asset=i))
     
     plt.show()
@@ -137,7 +142,7 @@ for i in df_eco.columns:
     
     plt.figure()
     
-    plt.plot(df_eco[i])
+    plt.plot(df_eco[i], color = 'green')
     plt.title("{asset} - Monthly frequency".format(asset=i))
     
     plt.show()
@@ -147,7 +152,6 @@ for i in df_eco.columns:
 CORRELATION FUNCTIONS
 """
 
-import statsmodels.graphics.tsaplots as smp
 
 for i in df_logprice_daily.columns:
     
@@ -200,3 +204,55 @@ for i in df_eco.columns:
     
     plt.show()
     
+    
+"""
+-------------------------------------------------------------------------------
+POINT 3
+------------------------------------------------------------------------------
+"""
+
+"""
+Removing the last two years from monthly series
+"""
+
+df_logprice_monthly = df_logprice_monthly.iloc[:-24,:]
+
+df_eco = df_eco.iloc[:-24,:]
+
+"""
+Removing the last six months from daily series
+"""
+"""
+Since the number of days in which the market is open varies from year to year
+because of festivities and other factors and we have ten years of data and we 
+have to remove the last six months, we take the last 5% out
+"""
+
+n = int(np.round(df_logprice_daily.shape[0] * 0.05) )
+
+df_logprice_daily = df_logprice_daily.iloc[:-n,:]
+
+"""
+ADF TEST
+"""
+    
+#TEST
+
+#Creation of dataframe to store results
+lcol = ['ADF', 'pval', 'lags', 'num_obs', 'critical_values', 'IC']
+adf_df = pd.DataFrame(index = df_logprice_daily.columns, columns = lcol)
+
+
+
+for i in df_logprice_daily.columns:
+
+    x = df_logprice_daily[i]
+    
+    l = smt.adfuller(x, regression='n', autolag='BIC')
+    print(l)
+    
+    adf_df.loc[i,:] = list(l)
+    
+    
+    
+
