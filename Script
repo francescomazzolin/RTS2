@@ -13,6 +13,8 @@ Monthly
 df_price_monthly = pd.read_excel('Monthly.xlsx')
 time_m = df_price_monthly.iloc[:,0]
 
+df_price_monthly = df_price_monthly.set_index("Exchange Date")
+
 """
 Getting the log-levels of the prices of the equities
 """
@@ -32,12 +34,12 @@ df_ret_monthly = pd.DataFrame(data = np.array(100*(df_logprice_monthly -
 
 df_ret_monthly = df_ret_monthly.iloc[1:,:]
 df_ret_monthly['Date'] = time_m[1:]
-
+df_ret_monthly = df_ret_monthly.set_index("Date")
 
 #Adding time again
 
 df_logprice_monthly['Date'] = time_m
-
+df_logprice_monthly = df_logprice_monthly.set_index("Date")
 
 """
 Daily
@@ -45,6 +47,8 @@ Daily
 
 df_price_daily = pd.read_excel('Daily.xlsx')
 time_d = df_price_daily.iloc[:,0]
+
+df_price_daily = df_price_daily.set_index("Exchange Date")
 
 """
 Getting the log-levels of the prices of the equities
@@ -66,11 +70,13 @@ df_ret_daily = pd.DataFrame(data = np.array(100*(df_logprice_daily -
 df_ret_daily = df_ret_daily.iloc[1:,:]
 df_ret_daily['Date'] = time_d[1:]
 
+df_ret_daily = df_ret_daily.set_index("Date")
+
 
 #Adding time again
 
 df_logprice_daily['Date'] = time_d
-
+df_logprice_daily = df_logprice_daily.set_index("Date")
 
 
 """
@@ -91,6 +97,10 @@ df_eco = df_eco.sort_index()
 -------------------------------------------------------------------------------
 POINT 2
 ------------------------------------------------------------------------------
+"""
+
+"""
+PLOTS
 """
 
 """
@@ -131,3 +141,62 @@ for i in df_eco.columns:
     plt.title("{asset} - Monthly frequency".format(asset=i))
     
     plt.show()
+
+
+"""
+CORRELATION FUNCTIONS
+"""
+
+import statsmodels.graphics.tsaplots as smp
+
+for i in df_logprice_daily.columns:
+    
+    plt.figure()
+    
+    smp.plot_acf(df_logprice_daily[i], lags = 20)
+    plt.title("{asset} log prices - Daily (ACF)".format(asset=i))
+    
+    plt.show()
+
+    plt.figure()
+    
+    smp.plot_pacf(df_logprice_daily[i], lags = 20)
+    plt.title("{asset} log prices - Daily (PACF)".format(asset=i))
+    
+    plt.show()
+    
+for i in df_logprice_monthly.columns:
+    
+    plt.figure()
+    
+    smp.plot_acf(df_logprice_monthly[i], lags = 20)
+    plt.title("{asset} log prices - Monthly (ACF)".format(asset=i))
+    
+    plt.show()
+
+    plt.figure()
+    
+    smp.plot_pacf(df_logprice_monthly[i], lags = 20)
+    plt.title("{asset} log prices - Monthly (PACF)".format(asset=i))
+    
+    plt.show()
+ 
+    
+#Problem with the series being of different lengths 
+df_eco = df_eco.iloc[:-1,:]
+for i in df_eco.columns:
+    
+    plt.figure()
+    
+    smp.plot_acf(df_eco[i], lags = 20)
+    plt.title("{asset} log prices - Monthly (ACF)".format(asset=i))
+    
+    plt.show()
+
+    plt.figure()
+    
+    smp.plot_pacf(df_eco[i], lags = 20)
+    plt.title("{asset} log prices - Monthly (PACF)".format(asset=i))
+    
+    plt.show()
+    
