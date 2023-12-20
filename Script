@@ -39,12 +39,12 @@ df_ret_monthly = pd.DataFrame(data = np.array(100*(df_logprice_monthly -
 
 df_ret_monthly = df_ret_monthly.iloc[1:,:]
 df_ret_monthly['Date'] = time_m[1:]
-df_ret_monthly = df_ret_monthly.set_index("Date")
+df_ret_monthly = #df_ret_monthly.set_index("Date")
 
 #Adding time again
 
 df_logprice_monthly['Date'] = time_m
-df_logprice_monthly = df_logprice_monthly.set_index("Date")
+#df_logprice_monthly = df_logprice_monthly.set_index("Date")
 
 """
 Daily
@@ -53,7 +53,7 @@ Daily
 df_price_daily = pd.read_excel('Daily.xlsx')
 time_d = df_price_daily.iloc[:,0]
 
-df_price_daily = df_price_daily.set_index("Exchange Date")
+#df_price_daily = df_price_daily.set_index("Exchange Date")
 
 """
 Getting the log-levels of the prices of the equities
