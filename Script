@@ -1,0 +1,51 @@
+import pandas as pd
+import numpy as np
+
+"""
+POINT 1: DATA DOWNLOAD AND MANIPULATION
+"""
+
+"""
+Monthly
+"""
+
+df_price_monthly = pd.read_excel('Monthly.xlsx')
+time = df_price_monthly.iloc[1:,0]
+
+
+"""
+Creating the daily log returns for the equities and the equity index
+"""
+
+df_ret_monthly = pd.DataFrame(data = np.array(100*(np.log(df_price_monthly.iloc[:,1:]) - 
+                                            np.log(df_price_monthly.iloc[:,1:] . shift(1))
+                                            )),
+                            columns = df_price_monthly.columns[1:])
+df_ret_monthly = df_ret_monthly.iloc[1:,:]
+df_ret_monthly['Exchange Date'] = time
+
+
+"""
+Daily
+"""
+
+df_price_daily = pd.read_excel('Daily.xlsx')
+time = df_price_daily.iloc[1:,0]
+
+"""
+Creating the daily log returns for the equities and the equity index
+"""
+
+df_ret_daily = pd.DataFrame(data = np.array(100*(np.log(df_price_daily.iloc[:,1:]) - 
+                                            np.log(df_price_daily.iloc[:,1:] . shift(1))
+                                            )),
+                            columns = df_price_monthly.columns[1:])
+df_ret_daily = df_ret_daily.iloc[1:,:]
+df_ret_daily['Exchange Date'] = time 
+
+
+"""
+ECONOMIC INDICATORS
+"""
+
+
