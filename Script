@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+import matplotlib.pyplot as plt
 
 """
 POINT 1: DATA DOWNLOAD AND MANIPULATION
@@ -10,19 +11,32 @@ Monthly
 """
 
 df_price_monthly = pd.read_excel('Monthly.xlsx')
-time = df_price_monthly.iloc[1:,0]
+time_m = df_price_monthly.iloc[:,0]
+
+"""
+Getting the log-levels of the prices of the equities
+"""
+
+df_logprice_monthly = pd.DataFrame(data = np.array(np.log(df_price_monthly.iloc[:,1:])),
+                                           columns = df_price_monthly.columns[1:])
 
 
 """
 Creating the daily log returns for the equities and the equity index
 """
 
-df_ret_monthly = pd.DataFrame(data = np.array(100*(np.log(df_price_monthly.iloc[:,1:]) - 
-                                            np.log(df_price_monthly.iloc[:,1:] . shift(1))
-                                            )),
-                            columns = df_price_monthly.columns[1:])
+df_ret_monthly = pd.DataFrame(data = np.array(100*(df_logprice_monthly - 
+                                            df_logprice_monthly . shift(1))),
+                              columns = df_logprice_monthly.columns)
+
+
 df_ret_monthly = df_ret_monthly.iloc[1:,:]
-df_ret_monthly['Exchange Date'] = time
+df_ret_monthly['Date'] = time_m[1:]
+
+
+#Adding time again
+
+df_logprice_monthly['Date'] = time_m
 
 
 """
@@ -30,22 +44,92 @@ Daily
 """
 
 df_price_daily = pd.read_excel('Daily.xlsx')
-time = df_price_daily.iloc[1:,0]
+time_d = df_price_daily.iloc[:,0]
+
+"""
+Getting the log-levels of the prices of the equities
+"""
+
+df_logprice_daily = pd.DataFrame(data = np.array(np.log(df_price_daily.iloc[:,1:])),
+                                           columns = df_price_monthly.columns[1:])
+
 
 """
 Creating the daily log returns for the equities and the equity index
 """
 
-df_ret_daily = pd.DataFrame(data = np.array(100*(np.log(df_price_daily.iloc[:,1:]) - 
-                                            np.log(df_price_daily.iloc[:,1:] . shift(1))
-                                            )),
-                            columns = df_price_monthly.columns[1:])
+df_ret_daily = pd.DataFrame(data = np.array(100*(df_logprice_daily - 
+                                            df_logprice_daily . shift(1))),
+                              columns = df_logprice_daily.columns)
+
+
 df_ret_daily = df_ret_daily.iloc[1:,:]
-df_ret_daily['Exchange Date'] = time 
+df_ret_daily['Date'] = time_d[1:]
+
+
+#Adding time again
+
+df_logprice_daily['Date'] = time_d
+
 
 
 """
 ECONOMIC INDICATORS
 """
 
+df_eco = pd.read_excel("Eco.xlsx", sheet_name = "Sheet2")
 
+
+
+#Setting the index and reordering from oldest to newest date
+
+df_eco = df_eco.set_index("Exchange Date")
+df_eco = df_eco.sort_index()
+
+
+"""
+-------------------------------------------------------------------------------
+POINT 2
+------------------------------------------------------------------------------
+"""
+
+#%%
+
+"""
+Plots of the daily log prices of the equities
+"""
+for i in df_logprice_daily.columns:
+    
+    plt.figure()
+    
+    plt.plot(time_d, df_logprice_daily[i])
+    plt.title("{asset} log prices - Daily frequency".format(asset=i))
+    
+    plt.show()
+    
+    
+"""
+Plots of the monthly log prices of the equities
+"""
+for i in df_logprice_monthly.columns:
+    
+    plt.figure()
+    
+    plt.plot(time_m, df_logprice_monthly[i])
+    plt.title("{asset} log prices - Monthly frequency".format(asset=i))
+    
+    plt.show()
+    
+    
+"""
+Plots for the economic indicators
+"""
+
+for i in df_eco.columns:
+    
+    plt.figure()
+    
+    plt.plot(df_eco[i])
+    plt.title("{asset} - Monthly frequency".format(asset=i))
+    
+    plt.show()
