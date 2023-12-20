@@ -253,21 +253,5 @@ for i in df_logprice_daily.columns:
     
     adf_df.loc[i,:] = list(l)
     
-    #TEST
 
-    #Creation of dataframe to store results
-    lcol = ['ADF', 'pval', 'lags', 'num_obs', 'critical_values', 'IC']
-    adf_df = pd.DataFrame(index = df_logprice_daily.columns, columns = lcol)
-
-
-
-    for i in df_logprice_daily.columns:
-
-        x = df_logprice_daily[i]
-        
-        l = smt.adfuller(x, regression='n', autolag='BIC')
-
-        
-        adf_df.loc[i,:] = list(l)
-        
         
