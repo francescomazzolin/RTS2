@@ -256,3 +256,28 @@ Economic indicators
 """
 
 adf_eco = rf.adf_test(df_eco)
+
+
+
+"""
+Taking the first difference
+"""
+
+"""
+As we already computed the log returns for the equities' series, we remove agian 
+the last two years for the monthly series and the last six months for the 
+daily series
+"""
+df_ret_monthly = df_ret_monthly.iloc[:-24,:]
+
+n = int(np.round(df_ret_daily.shape[0] * 0.05) )
+
+df_ret_daily = df_ret_daily.iloc[:-n,:]
+
+"""
+We re-evaluate the ADF test for the first differences of these series
+"""
+
+adf_ret_monthly = rf.adf_test(df_ret_monthly)
+
+adf_ret_daily = rf.adf_test(df_ret_daily)
