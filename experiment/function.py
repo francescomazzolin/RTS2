@@ -17,12 +17,8 @@ def adf_test(df):
     
     for i in df.columns:
     
-        x = df[i]
-        
-        l = smt.adfuller(x, regression='n', autolag='BIC')
-
-        
-        adf_df.loc[i,:] = list(l)
+        adftest = smt.adfuller(df[i], maxlag =21)      
+        adf_df.loc[i,:] = adftest
     
     return adf_df
 
@@ -50,14 +46,14 @@ def correlation_graphs(df,nlg,z):
         
 
         
-def hist_comparison(df_1, df_2, var1, var2, freq):
+def hist_comparison(df_1, df_2, var1, var2, freq, nbn):
     
     
     for i in df_1.columns:
         
         #plt.figure()
         
-        plt.hist(df_1[i], bins = 1000, color = "blue")
+        plt.hist(df_1[i], bins = nbn, color = "blue")
         plt.title(f"{i} {var1} - {freq} frequency")
         
         plt.show()
@@ -65,7 +61,7 @@ def hist_comparison(df_1, df_2, var1, var2, freq):
         
         #plt.figure()
         
-        plt.hist(df_2[i], bins = 1000, color = "orange")
+        plt.hist(df_2[i], bins = nbn, color = "orange")
         plt.title(f"{i} {var2} - {freq} frequency")
         
         plt.show()
