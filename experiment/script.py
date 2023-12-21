@@ -6,7 +6,7 @@ import statsmodels.tsa.stattools as smt
 
 import statsmodels.graphics.tsaplots as smp
 
-import function as rf
+import function2 as rf
 
 
 """
@@ -141,6 +141,7 @@ rf.correlation_graphs(df_logprice_monthly, 20, "Monthly")
 df_eco = df_eco.iloc[:-1,:]
     
 rf.correlation_graphs(df_eco, 20, "Monthly")  
+
     
 """
 -------------------------------------------------------------------------------
@@ -152,9 +153,9 @@ POINT 3: ADF TEST
 Removing the last two years from monthly series
 """
 
-df_logprice_monthly = df_logprice_monthly.iloc[:-24,:]
+df_logprice_monthly_cut = df_logprice_monthly.iloc[:-24,:]
 
-df_eco = df_eco.iloc[:-24,:]
+df_eco_cut = df_eco.iloc[:-24,:]
 
 """
 Removing the last six months from daily series
@@ -167,7 +168,7 @@ have to remove the last six months, we take the last 5% out
 
 n = int(np.round(df_logprice_daily.shape[0] * 0.05) )
 
-df_logprice_daily = df_logprice_daily.iloc[:-n,:]
+df_logprice_daily_cut = df_logprice_daily.iloc[:-n,:]
 
 """
 ADF TEST
@@ -177,20 +178,21 @@ ADF TEST
 Daily 
 """
 
-adf_daily_df = rf.adf_test(df_logprice_daily)
+adf_daily_df = rf.adf_test(df_logprice_daily_cut)
 
 """
 Monthly
 """
 
-adf_monthly_df = rf.adf_test(df_logprice_monthly)
+adf_monthly_df = rf.adf_test(df_logprice_monthly_cut)
 
 """
 Economic indicators
 """
 
-adf_eco = rf.adf_test(df_eco)
+adf_eco_cut = rf.adf_test(df_eco_cut)
 
+#####################################################################
 """
 Taking the first difference
 """
@@ -200,19 +202,19 @@ As we already computed the log returns for the equities' series, we remove agian
 the last two years for the monthly series and the last six months for the 
 daily series
 """
-df_ret_monthly = df_ret_monthly.iloc[:-24,:]
+df_ret_monthly_cut = df_ret_monthly.iloc[:-24,:]
 
 n = int(np.round(df_ret_daily.shape[0] * 0.05) )
 
-df_ret_daily = df_ret_daily.iloc[:-n,:]
+df_ret_daily_cut = df_ret_daily.iloc[:-n,:]
 
 """
 We re-evaluate the ADF test for the first differences of these series
 """
 
-adf_ret_monthly = rf.adf_test(df_ret_monthly)
+adf_ret_monthly_cut = rf.adf_test(df_ret_monthly_cut)
 
-adf_ret_daily = rf.adf_test(df_ret_daily)
+adf_ret_daily_cut = rf.adf_test(df_ret_daily_cut)
 
 """
 Taking the log-first difference of the economic indicators' series
@@ -220,19 +222,21 @@ Taking the log-first difference of the economic indicators' series
 
 df_ret_eco = pd.DataFrame(data = np.array(100*(df_eco - 
                                             df_eco . shift(1))),
-                              columns = df_eco.columns)
+                              columns = df_eco_cut.columns)
 
 
 df_ret_eco = df_ret_eco.iloc[1:,:]
 df_ret_eco['Date'] = time_m[1:]
 df_ret_eco = df_ret_eco.set_index("Date")
 
+df_ret_eco_cut = df_ret_eco.iloc[:-24,:]
+
 """
 Evaluate the ADF test for the log-first difference of the economic indicators'
 series
 """
 
-adf_ret_eco = rf.adf_test(df_ret_eco)
+adf_ret_eco_cut = rf.adf_test(df_ret_eco_cut)
 
     
 """
@@ -242,14 +246,14 @@ Befora and after comparison between the histograms of:
 """
 
 
-rf.hist_comparison(df_logprice_daily, df_ret_daily, var1 = "log prices", var2 = "log returns", 
+rf.hist_comparison(df_logprice_daily_cut, df_ret_daily_cut, var1 = "log prices", var2 = "log returns", 
                    freq = "Daily", nbn = 1000)
 
-rf.hist_comparison(df_logprice_monthly, df_ret_monthly, 
+rf.hist_comparison(df_logprice_monthly_cut, df_ret_monthly_cut, 
                    var1 = 'log prices', var2 = 'log returns',
                    freq = 'Monthly', nbn = 90)
 
-rf.hist_comparison(df_eco, df_ret_eco, 
+rf.hist_comparison(df_eco_cut, df_ret_eco_cut, 
                    var1 = 'log prices', var2 = 'log returns',
                    freq = 'Monthly', nbn = 90)
 
