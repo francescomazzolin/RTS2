@@ -6,7 +6,7 @@ import statsmodels.tsa.stattools as smt
 
 import statsmodels.graphics.tsaplots as smp
 
-import function as rf
+import function2 as rf
 
 
 """
@@ -26,8 +26,8 @@ df_price_monthly = df_price_monthly.set_index("Exchange Date")
 Getting the log-levels of the prices of the equities
 """
 
-df_logprice_monthly = pd.DataFrame(data = np.array(np.log(df_price_monthly.iloc[:,1:])),
-                                           columns = df_price_monthly.columns[1:])
+df_logprice_monthly = pd.DataFrame(data = np.array(np.log(df_price_monthly)),
+                                           columns = df_price_monthly.columns)
 
 
 """
@@ -61,8 +61,8 @@ df_price_daily = df_price_daily.set_index("Exchange Date")
 Getting the log-levels of the prices of the equities
 """
 
-df_logprice_daily = pd.DataFrame(data = np.array(np.log(df_price_daily.iloc[:,1:])),
-                                           columns = df_price_monthly.columns[1:])
+df_logprice_daily = pd.DataFrame(data = np.array(np.log(df_price_daily)),
+                                           columns = df_price_monthly.columns)
 
 
 """
@@ -243,7 +243,17 @@ Befora and after comparison between the histograms of:
 
 
 rf.hist_comparison(df_logprice_daily, df_ret_daily, var1 = "log prices", var2 = "log returns", 
-                   freq = "Daily")
+                   freq = "Daily", nbn = 1000)
+
+rf.hist_comparison(df_logprice_monthly, df_ret_monthly, 
+                   var1 = 'log prices', var2 = 'log returns',
+                   freq = 'Monthly', nbn = 90)
+
+rf.hist_comparison(df_eco, df_ret_eco, 
+                   var1 = 'log prices', var2 = 'log returns',
+                   freq = 'Monthly', nbn = 90)
+
+
 
 """
 -------------------------------------------------------------------------------
