@@ -6,7 +6,7 @@ import statsmodels.tsa.stattools as smt
 
 import statsmodels.graphics.tsaplots as smp
 
-import function2 as rf
+import function as rf
 
 
 """
