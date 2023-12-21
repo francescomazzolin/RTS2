@@ -6,7 +6,7 @@ import statsmodels.tsa.stattools as smt
 
 import statsmodels.graphics.tsaplots as smp
 
-import function1 as rf
+import function2 as rf
 
 
 """
@@ -113,100 +113,34 @@ PLOTS
 """
 Plots of the daily log prices of the equities
 """
-for i in df_logprice_daily.columns:
+
     
-    plt.figure()
-    
-    plt.plot(time_d, df_logprice_daily[i])
-    plt.title("{asset} log prices - Daily frequency".format(asset=i))
-    
-    plt.show()
-    
+rf.graph(df_logprice_daily,"log prices","blue","Daily")
     
 """
 Plots of the monthly log prices of the equities
 """
-for i in df_logprice_monthly.columns:
     
-    plt.figure()
-    
-    plt.plot(time_m, df_logprice_monthly[i], color = 'red')
-    plt.title("{asset} log prices - Monthly frequency".format(asset=i))
-    
-    plt.show()
-    
-    
+rf.graph(df_logprice_monthly,"log prices","red","Monthly")    
+
 """
 Plots for the economic indicators
 """
 
-for i in df_eco.columns:
-    
-    plt.figure()
-    
-    plt.plot(df_eco[i], color = 'green')
-    plt.title("{asset} - Monthly frequency".format(asset=i))
-    
-    plt.show()
-
+rf.graph(df_eco,"log prices","green","Monthly") 
 
 """
 CORRELATION FUNCTIONS
 """
 
-import statsmodels.graphics.tsaplots as smp
+rf.correlation_graphs(df_logprice_daily, 20, "Daily")    
 
-for i in df_logprice_daily.columns:
-    
-    plt.figure()
-    
-    smp.plot_acf(df_logprice_daily[i], lags = 20)
-    plt.title("{asset} log prices - Daily (ACF)".format(asset=i))
-    
-    plt.show()
+rf.correlation_graphs(df_logprice_monthly, 20, "Monthly")  
 
-    plt.figure()
-    
-    smp.plot_pacf(df_logprice_daily[i], lags = 20)
-    plt.title("{asset} log prices - Daily (PACF)".format(asset=i))
-    
-    plt.show()
-    
-for i in df_logprice_monthly.columns:
-    
-    plt.figure()
-    
-    smp.plot_acf(df_logprice_monthly[i], lags = 20)
-    plt.title("{asset} log prices - Monthly (ACF)".format(asset=i))
-    
-    plt.show()
-
-    plt.figure()
-    
-    smp.plot_pacf(df_logprice_monthly[i], lags = 20)
-    plt.title("{asset} log prices - Monthly (PACF)".format(asset=i))
-    
-    plt.show()
- 
-    
 #Problem with the series being of different lengths 
 df_eco = df_eco.iloc[:-1,:]
-for i in df_eco.columns:
     
-    plt.figure()
-    
-    smp.plot_acf(df_eco[i], lags = 20)
-    plt.title("{asset} log prices - Monthly (ACF)".format(asset=i))
-    
-    plt.show()
-
-    plt.figure()
-    
-    smp.plot_pacf(df_eco[i], lags = 20)
-    plt.title("{asset} log prices - Monthly (PACF)".format(asset=i))
-    
-    plt.show()
-    
+rf.correlation_graphs(df_eco, 20, "Monthly")  
     
 """
 -------------------------------------------------------------------------------
@@ -301,6 +235,16 @@ series
 adf_ret_eco = rf.adf_test(df_ret_eco)
 
     
+"""
+Befora and after comparison between the histograms of:
+    1) log levels
+    2) log returns
+"""
+
+
+rf.hist_comparison(df_logprice_daily, df_ret_daily, var1 = "log prices", var2 = "log returns", 
+                   freq = "Daily")
+
 """
 -------------------------------------------------------------------------------
 POINT 4: ARMA MODELS
