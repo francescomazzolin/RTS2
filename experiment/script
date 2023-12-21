@@ -102,7 +102,7 @@ df_eco = df_eco.sort_index()
 
 """
 -------------------------------------------------------------------------------
-POINT 2
+POINT 2: PRELIMINARY ANALYSIS OF THE DATA
 ------------------------------------------------------------------------------
 """
 
@@ -210,7 +210,7 @@ for i in df_eco.columns:
     
 """
 -------------------------------------------------------------------------------
-POINT 3
+POINT 3: ADF TEST
 ------------------------------------------------------------------------------
 """
 
@@ -257,8 +257,6 @@ Economic indicators
 
 adf_eco = rf.adf_test(df_eco)
 
-
-
 """
 Taking the first difference
 """
@@ -281,3 +279,32 @@ We re-evaluate the ADF test for the first differences of these series
 adf_ret_monthly = rf.adf_test(df_ret_monthly)
 
 adf_ret_daily = rf.adf_test(df_ret_daily)
+
+"""
+Taking the log-first difference of the economic indicators' series
+"""
+
+df_ret_eco = pd.DataFrame(data = np.array(100*(df_eco - 
+                                            df_eco . shift(1))),
+                              columns = df_eco.columns)
+
+
+df_ret_eco = df_ret_eco.iloc[1:,:]
+df_ret_eco['Date'] = time_m[1:]
+df_ret_eco = df_ret_eco.set_index("Date")
+
+"""
+Evaluate the ADF test for the log-first difference of the economic indicators'
+series
+"""
+
+adf_ret_eco = rf.adf_test(df_ret_eco)
+
+    
+"""
+-------------------------------------------------------------------------------
+POINT 4: ARMA MODELS
+------------------------------------------------------------------------------
+"""
+
+
