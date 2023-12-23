@@ -1,0 +1,32 @@
+import statsmodels.api as sm
+
+def find_best_arma_model(ts):
+    best_aic = np.inf
+    best_order = None
+
+    for p in range(5):  
+        for q in range(5):
+            model = sm.tsa.ARIMA(ts, order=(p,0,q))
+            results = model.fit()
+            aic = results.aic
+            if aic < best_aic:
+                best_aic = aic
+                best_order = (p,0, q)
+            else:
+                None
+    return best_order
+
+
+for x in df_logprice_daily_cut.columns:
+    best_order = find_best_arma_model(df_logprice_monthly_cut[x])
+    print("Best order for ARMA:", best_order)
+
+    best_model = sm.tsa.ARIMA(df_logprice_monthly_cut[x], order=best_order)
+    results = best_model.fit()
+
+    print(results.summary())
+
+
+    plt.plot(results.resid)
+    plt.title('Residuals ARMA')
+    plt.show()
